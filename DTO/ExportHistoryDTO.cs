@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace DTO
+{
+    public class ExportHistoryDTO
+    {
+        public int Id { get; set; }
+        public int Material { get; set; }
+        public DateTime ExportDate { get; set; }
+        public int Quantity { get; set; }
+        public int Price { get; set; }
+        public int Receiver { get; set; }
+        public string Requestor { get; set; }
+        public int Handler { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public virtual EmployeeDTO HandlerNavigation { get; set; }
+        public virtual MaterialDTO MaterialNavigation { get; set; }
+        public virtual LineDTO ReceiverNavigation { get; set; }
+    }
+}

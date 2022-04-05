@@ -21,5 +21,7 @@ namespace Repositories.Interfaces
         void Remove(object id);
 
         void Update(TEntity entity);
+        void Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+
     }
 }

@@ -1,9 +1,6 @@
 ﻿using DTO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {
@@ -12,5 +9,6 @@ namespace Services.Interfaces
         IEnumerable<ImportHistoryDTO> GetAll(int page, int pageSize, out int totalRow);
 
         IEnumerable<ImportHistoryDTO> Search(DateTime dateFrom, DateTime dateTo , string Qcode, string PO, string Line,string Supplier, int page, int pageSize, out int totalRow);
+        void UpdateImportHistory(ImportHistoryDTO importHistory, string qCode,string remark);
     }
 }

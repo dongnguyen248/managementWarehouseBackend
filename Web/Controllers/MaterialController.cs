@@ -68,5 +68,19 @@ namespace Web.Controllers
                 return BadRequest(ex.InnerException.Message);
             }
         }
+        [HttpPost("update-material")]
+        public IActionResult UpdateMaterial(MaterialDTO material)
+        {
+            try
+            {
+                
+                
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
+        }
     }
 }

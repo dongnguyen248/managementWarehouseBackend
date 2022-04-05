@@ -7,8 +7,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
-    <PackageReference Include="SolrNet.Core" Version="1.0.19" />
   </ItemGroup>
 
   <ItemGroup>

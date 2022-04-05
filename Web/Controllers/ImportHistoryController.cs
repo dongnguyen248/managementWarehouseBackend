@@ -1,9 +1,12 @@
-﻿using DTO;
+﻿using Data;
+using DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repositories.Interfaces;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Web.Helpers.Core;
 using Web.Models;
 
@@ -14,7 +17,8 @@ namespace Web.Controllers
     public class ImportHistoryController : ControllerBase
     {
         private readonly IImportService _importService;
-        public ImportHistoryController(IImportService importService)
+
+        public ImportHistoryController(IImportService importService )
         {
             _importService = importService;
 
@@ -47,6 +51,20 @@ namespace Web.Controllers
                 Items = importHistoryVMs
             };
             return Ok(pagedSet);
+        }
+        [HttpPost("update-history-material")]
+        public IActionResult UpdateMaterial(ImportHistoryDTO importHistory, string qCode,string remark )
+        {
+            try
+            {
+                _importService.UpdateImportHistory(importHistory, qCode,remark);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
         }
     }
 }

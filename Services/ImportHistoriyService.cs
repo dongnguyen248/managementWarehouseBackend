@@ -15,13 +15,15 @@ namespace Services
     public class ImportHistoriyService : IImportService
     {
         private readonly IRepository<ImportHistory> _importRepository;
+        private readonly IRepository<Material> _materialRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ImportHistoriyService(IRepository<ImportHistory> importRepository, IUnitOfWork unitOfWork,IMapper mapper)
+        public ImportHistoriyService(IRepository<ImportHistory> importRepository, IUnitOfWork unitOfWork,IMapper mapper, IRepository<Material> materialRepository)
         {
             _importRepository = importRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _materialRepository = materialRepository;
 
         }
         public IEnumerable<ImportHistoryDTO> GetAll(int page, int pageSize, out int totalRow)
@@ -32,6 +34,8 @@ namespace Services
             return _mapper.Map<IEnumerable<ImportHistoryDTO>>(result);
         }
 
+       
+
         public IEnumerable<ImportHistoryDTO> Search(DateTime dateFrom, DateTime dateTo, string Qcode, string PO, string Line, string Supplier, int page, int pageSize, out int totalRow)
         {
             
@@ -41,6 +45,19 @@ namespace Services
             totalRow = importHistories.Count();
             IEnumerable<ImportHistory> result = importHistories.OrderByDescending(x => x.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).AsEnumerable();
             return _mapper.Map<IEnumerable<ImportHistoryDTO>>(result);
+        }
+
+      
+        public  void UpdateImportHistory(ImportHistoryDTO importHistory, string qCode,string remark)
+        {
+           var material = _materialRepository.FindSingle(m=>m.Qcode.Contains(qCode));
+            material.Remark = remark;
+            if (material != null)
+            {
+                _importRepository.Update(_mapper.Map<ImportHistory>(importHistory), x => x.Buyer, x => x.Supplier, x => x.Po,x=>x.LineRequest,x=>x.Price );
+                _materialRepository.Update(material);
+                _unitOfWork.Commit();
+            }
         }
     }
 }

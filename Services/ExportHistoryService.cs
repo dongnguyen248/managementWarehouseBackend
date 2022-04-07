@@ -30,7 +30,11 @@ namespace Services
 
         public IEnumerable<ExportHistoryDTO> GetAll(int page, int pageSize, out int totalRow)
         {
-            throw new NotImplementedException();
+            IQueryable<ExportHistory> exportHistories = _exportRepository.FindAll(x => x.MaterialNavigation, x => x.HandlerNavigation, x => x.ReceiverNavigation, x => x.DepartmentNavigation);
+            totalRow = exportHistories.Count();
+            IEnumerable<ExportHistory> result = exportHistories.OrderByDescending(x=>x.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).AsEnumerable();
+            return _mapper.Map<IEnumerable<ExportHistoryDTO>>(result);
+            
         }
 
         public IEnumerable<ExportHistoryDTO> Search(DateTime dateFrom, DateTime dateTo, string Qcode, string PO, string Line, string Supplier, int page, int pageSize, out int totalRow)

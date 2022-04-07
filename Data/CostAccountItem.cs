@@ -1,4 +1,5 @@
-﻿#nullable disable
+﻿
+using System.Collections.Generic;
 
 namespace Data
 {
@@ -9,5 +10,6 @@ namespace Data
         public int CostAccount { get; set; }
 
         public virtual CostAccount CostAccountNavigation { get; set; }
+        public virtual ICollection<ExportHistory> ExportHistories { get; set; } 
     }
 }

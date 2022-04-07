@@ -22,7 +22,7 @@ namespace Web.Models
             Specification = importHistory.MaterialNavigation.Specification;
             Buyer = importHistory.Buyer;
             Po = importHistory.Po;
-            Remark = importHistory.MaterialNavigation.Remark;
+            Remark = importHistory.Remark;
             Supplier = importHistory.Supplier;
             Requester = importHistory.LineRequestNavigation.Name;
             Received = importHistory.InspectionNavigation.Result;

@@ -20,7 +20,6 @@ namespace Data
         public string Location { get; set; }
         public string Item { get; set; }
         public string Specification { get; set; }
-        public string Remark { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public virtual Unit UnitNavigation { get; set; }

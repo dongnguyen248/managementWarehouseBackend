@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(WarehouseManagementContext))]
-    [Migration("20220330035948_init")]
+    [Migration("20220407044801_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,23 @@ namespace Data.Migrations
                     b.HasIndex("CostAccount");
 
                     b.ToTable("CostAccountItem");
+                });
+
+            modelBuilder.Entity("Data.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(95)
+                        .HasColumnType("nvarchar(95)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Data.Employee", b =>
@@ -123,6 +140,9 @@ namespace Data.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
+                    b.Property<int>("Department")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ExportDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("date")
@@ -143,17 +163,28 @@ namespace Data.Migrations
                     b.Property<int>("Receiver")
                         .HasColumnType("int");
 
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<string>("Requestor")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("costAccount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Department");
 
                     b.HasIndex("Handler");
 
                     b.HasIndex("Material");
 
                     b.HasIndex("Receiver");
+
+                    b.HasIndex("costAccount");
 
                     b.ToTable("ExportHistory");
                 });
@@ -379,6 +410,12 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.ExportHistory", b =>
                 {
+                    b.HasOne("Data.Department", "DepartmentNavigation")
+                        .WithMany("ExportHistories")
+                        .HasForeignKey("Department")
+                        .HasConstraintName("Fk_EmportHistory_Deparment")
+                        .IsRequired();
+
                     b.HasOne("Data.Employee", "HandlerNavigation")
                         .WithMany("ExportHistories")
                         .HasForeignKey("Handler")
@@ -396,6 +433,16 @@ namespace Data.Migrations
                         .HasForeignKey("Receiver")
                         .HasConstraintName("Fk_ExportHistory_Receiver")
                         .IsRequired();
+
+                    b.HasOne("Data.CostAccount", "CostAccountNavigation")
+                        .WithMany("ExportHistories")
+                        .HasForeignKey("costAccount")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CostAccountNavigation");
+
+                    b.Navigation("DepartmentNavigation");
 
                     b.Navigation("HandlerNavigation");
 
@@ -434,7 +481,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Inspection", b =>
                 {
                     b.HasOne("Data.ImportHistory", "Import")
-                        .WithOne("Inspection")
+                        .WithOne("InspectionNavigation")
                         .HasForeignKey("Data.Inspection", "ImportId")
                         .HasConstraintName("Fk_Inspection_ImportHistory")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -465,6 +512,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.CostAccount", b =>
                 {
                     b.Navigation("CostAccountItems");
+
+                    b.Navigation("ExportHistories");
+                });
+
+            modelBuilder.Entity("Data.Department", b =>
+                {
+                    b.Navigation("ExportHistories");
                 });
 
             modelBuilder.Entity("Data.Employee", b =>
@@ -476,7 +530,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.ImportHistory", b =>
                 {
-                    b.Navigation("Inspection");
+                    b.Navigation("InspectionNavigation");
                 });
 
             modelBuilder.Entity("Data.Line", b =>

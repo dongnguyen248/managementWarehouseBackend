@@ -15,7 +15,7 @@ namespace DTO
         public string Po { get; set; }
         public bool Allocated { get; set; }
         public int Handler { get; set; }
-
+        public string Remark { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public virtual EmployeeDTO HandlerNavigation { get; set; }

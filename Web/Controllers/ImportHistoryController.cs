@@ -1,5 +1,6 @@
 ﻿using Data;
 using DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.Interfaces;
@@ -52,12 +53,30 @@ namespace Web.Controllers
             };
             return Ok(pagedSet);
         }
-        [HttpPost("update-history-material")]
-        public IActionResult UpdateMaterial(ImportHistoryDTO importHistory, string qCode,string remark )
+        [Authorize]
+        [HttpPost("add-importHistory")]
+        public IActionResult AddImportHistory(ImportHistoryDTO importHistory)
         {
             try
             {
-                _importService.UpdateImportHistory(importHistory, qCode,remark);
+                int handler = int.Parse(User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.Ordinal)).Value);
+                importHistory.Handler.Equals(handler);
+                _importService.Add(importHistory);
+                
+                return Ok();
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("update-history-material")]
+        public IActionResult UpdateMaterial(ImportHistoryDTO importHistory)
+        {
+            try
+            {
+                _importService.UpdateImportHistory(importHistory);
 
                 return Ok();
             }

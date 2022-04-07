@@ -26,6 +26,21 @@ namespace Services
             _materialRepository = materialRepository;
 
         }
+
+        public void Add(ImportHistoryDTO importHistory)
+        {
+            try
+            {
+                _importRepository.Add(_mapper.Map<ImportHistory>(importHistory));
+
+                _unitOfWork.Commit();
+
+            }catch(Exception ex)
+            {
+                throw ;
+            }
+        }
+
         public IEnumerable<ImportHistoryDTO> GetAll(int page, int pageSize, out int totalRow)
         {
             IQueryable<ImportHistory> importHistories = _importRepository.FindAll(x => x.LineRequestNavigation,m=>m.MaterialNavigation,h=>h.HandlerNavigation, i => i.InspectionNavigation);
@@ -48,16 +63,16 @@ namespace Services
         }
 
       
-        public  void UpdateImportHistory(ImportHistoryDTO importHistory, string qCode,string remark)
+        public  void UpdateImportHistory(ImportHistoryDTO importHistory)
         {
-           var material = _materialRepository.FindSingle(m=>m.Qcode.Contains(qCode));
-            material.Remark = remark;
-            if (material != null)
-            {
-                _importRepository.Update(_mapper.Map<ImportHistory>(importHistory), x => x.Buyer, x => x.Supplier, x => x.Po,x=>x.LineRequest,x=>x.Price );
-                _materialRepository.Update(material);
+           //var material = _materialRepository.FindSingle(m=>m.Qcode.Contains(qCode));
+                _importRepository.Update(_mapper.Map<ImportHistory>(importHistory));
+            
                 _unitOfWork.Commit();
-            }
+            //if (material != null)
+            //{
+            //    _materialRepository.Update(material);
+            //}
         }
     }
 }

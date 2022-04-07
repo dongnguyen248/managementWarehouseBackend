@@ -21,6 +21,19 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(95)", maxLength: 95, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employee",
                 columns: table => new
                 {
@@ -144,11 +157,26 @@ namespace Data.Migrations
                     Receiver = table.Column<int>(type: "int", nullable: false),
                     Requestor = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Handler = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())")
+                    Department = table.Column<int>(type: "int", nullable: false),
+                    costAccount = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    Remark = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExportHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "Fk_EmportHistory_Deparment",
+                        column: x => x.Department,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExportHistory_CostAccount_costAccount",
+                        column: x => x.costAccount,
+                        principalTable: "CostAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "Fk_ExportHistory_Handler",
                         column: x => x.Handler,
@@ -249,6 +277,16 @@ namespace Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExportHistory_costAccount",
+                table: "ExportHistory",
+                column: "costAccount");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExportHistory_Department",
+                table: "ExportHistory",
+                column: "Department");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExportHistory_Handler",
                 table: "ExportHistory",
                 column: "Handler");
@@ -311,6 +349,9 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inspection");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
 
             migrationBuilder.DropTable(
                 name: "CostAccount");

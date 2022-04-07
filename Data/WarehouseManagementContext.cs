@@ -33,7 +33,7 @@ namespace Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=WarehouseManagement;User ID=sa;Password=1;");
+                optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=WarehouseMG;User ID=sa;Password=1;");
             }
         }
 
@@ -107,6 +107,9 @@ namespace Data
             {
                 entity.ToTable("ExportHistory");
                 entity.Property(e => e.Remark).HasMaxLength(300);
+                entity.HasOne(e => e.CostAccountItemNavigation).WithMany(p => p.ExportHistories).HasForeignKey(d => d.costAccountItem);
+                entity.HasOne(e=>e.CostAccountNavigation)
+                .WithMany(p => p.ExportHistories).HasForeignKey(d => d.costAccount);
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -147,7 +150,7 @@ namespace Data
                 entity.ToTable("ImportHistory");
 
                 entity.Property(e => e.Buyer).HasMaxLength(100);
-
+                entity.Property(e => e.Remark).HasMaxLength(500);
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -240,8 +243,6 @@ namespace Data
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasColumnName("QCode");
-
-                entity.Property(e => e.Remark).HasMaxLength(500);
 
                 entity.Property(e => e.Specification).HasMaxLength(500);
 

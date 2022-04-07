@@ -17,6 +17,7 @@ namespace Data
         public string Po { get; set; }
         public bool Allocated { get; set; }
         public int Handler { get; set; }
+        public string Remark { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public virtual Employee HandlerNavigation { get; set; }

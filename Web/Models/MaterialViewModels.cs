@@ -27,7 +27,6 @@ namespace Web.Models
             LastImportDate = lastImportDate;
             Specification = material.Specification;
             Inventory = totalImport - totalExport;
-            Remark = material.Remark;
         }
 
         public int Id { get; set; }
@@ -40,10 +39,8 @@ namespace Web.Models
         public DateTime LastImportDate { get; set; }
         public string Specification { get; set; }
         public int Inventory { get; set; }
-        public string Remark { get; set; }
 
-        
-
+       
         public IEnumerable<MaterialViewModels> Gets(IEnumerable<MaterialDTO> materials)
         {
             foreach (var item in materials)

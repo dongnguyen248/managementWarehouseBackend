@@ -20,6 +20,13 @@ namespace Web.Controllers
         {
             _materialService = materialService;
         }
+        [HttpGet]
+        public IActionResult GetAllMaterial()
+        {
+            IEnumerable<MaterialDTO> materials = _materialService.GetAll();
+            return Ok(materials);
+        }
+
 
         [HttpGet("{page}/{pageSize}")]
         public IActionResult Get(int page, int pageSize)

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(WarehouseManagementContext))]
-    [Migration("20220406082252_updateDepartmentAndRemartExportHistory")]
-    partial class updateDepartmentAndRemartExportHistory
+    [Migration("20220407065643_updateRelationshipCostAcountItemsAndExportHistories")]
+    partial class updateRelationshipCostAcountItemsAndExportHistories
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -171,6 +171,12 @@ namespace Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("costAccount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("costAccountItem")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Department");
@@ -180,6 +186,10 @@ namespace Data.Migrations
                     b.HasIndex("Material");
 
                     b.HasIndex("Receiver");
+
+                    b.HasIndex("costAccount");
+
+                    b.HasIndex("costAccountItem");
 
                     b.ToTable("ExportHistory");
                 });
@@ -429,6 +439,22 @@ namespace Data.Migrations
                         .HasConstraintName("Fk_ExportHistory_Receiver")
                         .IsRequired();
 
+                    b.HasOne("Data.CostAccount", "CostAccountNavigation")
+                        .WithMany("ExportHistories")
+                        .HasForeignKey("costAccount")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.CostAccountItem", "CostAccountItemNavigation")
+                        .WithMany("ExportHistories")
+                        .HasForeignKey("costAccountItem")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CostAccountItemNavigation");
+
+                    b.Navigation("CostAccountNavigation");
+
                     b.Navigation("DepartmentNavigation");
 
                     b.Navigation("HandlerNavigation");
@@ -499,6 +525,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.CostAccount", b =>
                 {
                     b.Navigation("CostAccountItems");
+
+                    b.Navigation("ExportHistories");
+                });
+
+            modelBuilder.Entity("Data.CostAccountItem", b =>
+                {
+                    b.Navigation("ExportHistories");
                 });
 
             modelBuilder.Entity("Data.Department", b =>

@@ -10,5 +10,6 @@ namespace Services.Interfaces
         IEnumerable<MaterialDTO> Search(string qCode, string zone, string location, string item, string specification, int page, int pageSize, out int totalRow);
 
         void Add(MaterialDTO material);
+        IEnumerable<MaterialDTO> GetAll();
     }
 }

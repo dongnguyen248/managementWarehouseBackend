@@ -15,12 +15,14 @@ namespace Services
     public class MaterialService : IMaterialService
     {
         private readonly IRepository<Material> _materialRepository;
+        private readonly IImportService _importService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public MaterialService(IRepository<Material> materialRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        
+        public MaterialService(IRepository<Material> materialRepository, IUnitOfWork unitOfWork, IMapper mapper, IImportService importService)
         {
             _materialRepository = materialRepository;
+            _importService = importService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -29,7 +31,15 @@ namespace Services
         {
             try
             {
-                _materialRepository.Add(_mapper.Map<Material>(material));
+                Material m =_materialRepository.FindSingle(x => x.Qcode == material.Qcode.Trim());
+                if (m == null)
+                {
+                   _materialRepository.Add(_mapper.Map<Material>(material));
+                }
+                else
+                {
+                    return;
+                }
                 _unitOfWork.Commit();
             }
             catch
@@ -43,6 +53,12 @@ namespace Services
             IQueryable<Material> materials = _materialRepository.FindAll(x => x.ImportHistories, x => x.ExportHistories, x => x.ZoneNavigation, x => x.UnitNavigation);
             totalRow = materials.Count();
             IEnumerable<Material> result = materials.OrderByDescending(x => x.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).AsEnumerable();
+            return _mapper.Map<IEnumerable<MaterialDTO>>(result);
+        }
+
+        public IEnumerable<MaterialDTO> GetAll()
+        {
+            IEnumerable<Material> result = _materialRepository.FindAll();
             return _mapper.Map<IEnumerable<MaterialDTO>>(result);
         }
 

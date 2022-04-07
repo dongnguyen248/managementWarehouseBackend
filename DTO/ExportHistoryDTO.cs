@@ -12,10 +12,12 @@ namespace DTO
         public int Receiver { get; set; }
         public string Requestor { get; set; }
         public int Handler { get; set; }
+        public int Department { get; set; }
         public DateTime CreatedDate { get; set; }
 
         public virtual EmployeeDTO HandlerNavigation { get; set; }
         public virtual MaterialDTO MaterialNavigation { get; set; }
         public virtual LineDTO ReceiverNavigation { get; set; }
+        public virtual DepartmentDTO DepartmentNavigation { get; set; }
     }
 }

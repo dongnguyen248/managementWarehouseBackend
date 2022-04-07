@@ -18,6 +18,7 @@ namespace Services.AutoMapperConfig
             CreateMap<Material, MaterialDTO>().ReverseMap();
             CreateMap<Unit, UnitDTO>().ReverseMap();
             CreateMap<Zone, ZoneDTO>().ReverseMap();
+            CreateMap<Department, DepartmentDTO>().ReverseMap();
         }
     }
 }

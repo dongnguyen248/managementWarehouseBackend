@@ -16,7 +16,7 @@ namespace Data
             : base(options)
         {
         }
-
+        public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<CostAccount> CostAccounts { get; set; }
         public virtual DbSet<CostAccountItem> CostAccountItems { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
@@ -53,7 +53,10 @@ namespace Data
                     .HasMaxLength(15)
                     .IsUnicode(false);
             });
-
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.Property(d => d.Name).IsRequired().HasMaxLength(95);
+            });
             modelBuilder.Entity<CostAccountItem>(entity =>
             {
                 entity.ToTable("CostAccountItem");
@@ -103,7 +106,7 @@ namespace Data
             modelBuilder.Entity<ExportHistory>(entity =>
             {
                 entity.ToTable("ExportHistory");
-
+                entity.Property(e => e.Remark).HasMaxLength(300);
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -131,6 +134,12 @@ namespace Data
                     .HasForeignKey(d => d.Receiver)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_ExportHistory_Receiver");
+
+                entity.HasOne(d => d.DepartmentNavigation)
+                    .WithMany(p => p.ExportHistories)
+                    .HasForeignKey(d => d.Department)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_EmportHistory_Deparment");
             });
 
             modelBuilder.Entity<ImportHistory>(entity =>

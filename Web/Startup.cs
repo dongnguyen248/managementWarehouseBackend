@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Repositories;
 using Repositories.Interfaces;
 using Services;
@@ -44,7 +45,8 @@ namespace Web
 
             RegisterIoC(services);
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             RegiterAuthentication(services);
         }
@@ -111,6 +113,9 @@ namespace Web
             services.AddTransient<ILineService, LineService>();
             services.AddTransient<IZoneService, ZoneService>();
             services.AddTransient<IImportService,ImportHistoriyService>();
+            services.AddTransient<ICostAccountService,CostAccountService>();
+            services.AddTransient<IDeparmentService, DepartmentService>();
+            services.AddTransient<IExportService, ExportHistoryService>();
         }
 
         private void RegiterAuthentication(IServiceCollection services)

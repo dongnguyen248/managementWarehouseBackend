@@ -21,12 +21,14 @@ namespace Web.Models
             ExportDate = exportHistory.ExportDate;
             Specification = exportHistory.MaterialNavigation.Specification;
             CostLine = exportHistory.ReceiverNavigation.CostCenter;
+            Line = exportHistory.ReceiverNavigation.Name;
             Remark = exportHistory.Remark;
             Requestor = exportHistory.Requestor;
             Unit = exportHistory.MaterialNavigation.UnitNavigation.Name;
             Quantity = exportHistory.Quantity;
             CostAccount = exportHistory.CostAccountNavigation.Name;
             costAccountItem = exportHistory.CostAccountItemNavigation.Note;
+            Zone = exportHistory.MaterialNavigation.ZoneNavigation.Name;
         }
 
         public int Id { get; set; }
@@ -38,13 +40,14 @@ namespace Web.Models
         public DateTime ExportDate { get; set; }
         public string Specification { get; set; }
         public string CostLine { get; set; }
-        public string Requester { get; set; }
+        public string Line { get; set; }
         public string Unit { get; set; }
         public string Remark { get; set; }
         public string Requestor { get; set; }
         public int Quantity { get; set; }
         public string CostAccount { get; set; }
         public string costAccountItem { get; set; }
+        public string Zone { get; set; }
 
         public IEnumerable<ExportHistoryVM> Gets(IEnumerable<ExportHistoryDTO> importHistory)
         {

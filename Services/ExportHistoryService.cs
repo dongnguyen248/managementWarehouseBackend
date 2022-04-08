@@ -30,7 +30,7 @@ namespace Services
 
         public IEnumerable<ExportHistoryDTO> GetAll(int page, int pageSize, out int totalRow)
         {
-            IQueryable<ExportHistory> exportHistories = _exportRepository.FindAll(x => x.MaterialNavigation, x => x.HandlerNavigation, x => x.ReceiverNavigation, x => x.DepartmentNavigation);
+            IQueryable<ExportHistory> exportHistories = _exportRepository.FindAll(x=>x.CostAccountNavigation,x=>x.CostAccountItemNavigation,x => x.MaterialNavigation,x=>x.MaterialNavigation.UnitNavigation,x=>x.MaterialNavigation.ZoneNavigation, x => x.HandlerNavigation, x => x.ReceiverNavigation, x => x.DepartmentNavigation);
             totalRow = exportHistories.Count();
             IEnumerable<ExportHistory> result = exportHistories.OrderByDescending(x=>x.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).AsEnumerable();
             return _mapper.Map<IEnumerable<ExportHistoryDTO>>(result);

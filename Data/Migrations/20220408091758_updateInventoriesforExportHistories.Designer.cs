@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(WarehouseManagementContext))]
-    partial class WarehouseManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20220408091758_updateInventoriesforExportHistories")]
+    partial class updateInventoriesforExportHistories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,10 +177,7 @@ namespace Data.Migrations
                     b.Property<int>("costAccountItem")
                         .HasColumnType("int");
 
-                    b.Property<int>("inventoriesAfter")
-                        .HasColumnType("int");
-
-                    b.Property<int>("inventoriesBefor")
+                    b.Property<int>("inventories")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

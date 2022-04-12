@@ -29,6 +29,7 @@ namespace Web.Models
             CostAccount = exportHistory.CostAccountNavigation.Name;
             costAccountItem = exportHistory.CostAccountItemNavigation.Note;
             Zone = exportHistory.MaterialNavigation.ZoneNavigation.Name;
+         
         }
 
         public int Id { get; set; }

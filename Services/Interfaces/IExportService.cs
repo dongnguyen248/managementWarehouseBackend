@@ -15,6 +15,8 @@ namespace Services.Interfaces
 
         void Add(ExportHistoryDTO exportHistory);
         void UpdateExmportHistory(ExportHistoryDTO exportHistory, string qCode, string remark);
+        IEnumerable<ExportHistoryDTO> GetReportExcel(DateTime formDate,DateTime toDate);
+
 
     }
 }

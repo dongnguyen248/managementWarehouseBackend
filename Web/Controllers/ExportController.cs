@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Web.Models;
@@ -32,5 +33,18 @@ namespace Web.Controllers
             return Ok(exportHistoriesVM);
 
         }
+
+        [HttpGet("export-excel")]
+        public IActionResult GetExcelExportHistories(DateTime fromDate, DateTime toDate)
+        {
+            IEnumerable<ExportHistoryDTO> exportHistories = _exportService.GetReportExcel(fromDate, toDate);
+            IEnumerable<ReportExcelVM> exportHistoriesVM = new ReportExcelVM().Gets(exportHistories);
+
+            return Ok(exportHistoriesVM);
+
+        }
+
+       
+
     }
 }

@@ -16,6 +16,9 @@ namespace DTO
         public string Remark { get; set; }
         public int costAccount { get; set; }
         public int costAccountItem { get; set; }
+        public int inventoriesAfter { get; set; }
+        public int inventoriesBefor { get; set; }
+
         public DateTime CreatedDate { get; set; }
 
         public virtual EmployeeDTO HandlerNavigation { get; set; }

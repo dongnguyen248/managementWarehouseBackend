@@ -15,14 +15,13 @@ namespace Services
     public class MaterialService : IMaterialService
     {
         private readonly IRepository<Material> _materialRepository;
-        private readonly IImportService _importService;
+        
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         
-        public MaterialService(IRepository<Material> materialRepository, IUnitOfWork unitOfWork, IMapper mapper, IImportService importService)
+        public MaterialService(IRepository<Material> materialRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _materialRepository = materialRepository;
-            _importService = importService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }

@@ -46,7 +46,7 @@ namespace Repositories
 
         public TEntity FindSingle(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] properties)
         {
-            return FindAll(properties).SingleOrDefault(predicate);
+            return FindAll(properties).FirstOrDefault(predicate);
         }
 
         public void Remove(TEntity entity)

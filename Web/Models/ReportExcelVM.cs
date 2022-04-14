@@ -10,57 +10,7 @@ namespace Web.Models
 
     public class ReportExcelVM
     {
-        public ReportExcelVM()
-        {
-
-
-        }
-        public ReportExcelVM(ExportHistoryDTO exportHistory)
-        {
-            var importHistories = exportHistory.MaterialNavigation.ExportHistories.OrderBy(x => x.CreatedDate).ToList();
-           var totalImportInADay = exportHistory.MaterialNavigation.ImportHistories.Select(x=>x.ImportDate).ToList();
-            foreach(var total in totalImportInADay)
-            {
-                var sumImport = total;
-
-            }
-
-            if(importHistories != null)
-            {
-                foreach (var importHistoriesItem in importHistories)
-                {
-                    QCode = exportHistory.MaterialNavigation.Qcode;
-                    Item = exportHistory.MaterialNavigation.Item;
-                    Specification = exportHistory.MaterialNavigation.Specification;
-                    Unit = exportHistory.MaterialNavigation.UnitNavigation.Name;
-                    Price = exportHistory.Price;
-                    ImportQuantity = importHistoriesItem.Quantity;
-                    ExportQuantity = exportHistory.Quantity;
-                    InventoriesAfter = exportHistory.inventoriesAfter;
-                    InventoriesBefor = InventoriesAfter + ImportQuantity - ExportQuantity;
-
-                }
-            }
-            else
-            {
-                QCode = exportHistory.MaterialNavigation.Qcode;
-                Item = exportHistory.MaterialNavigation.Item;
-                Specification = exportHistory.MaterialNavigation.Specification;
-                Unit = exportHistory.MaterialNavigation.UnitNavigation.Name;
-                Price = exportHistory.Price;
-                ImportQuantity = 0;
-                ExportQuantity = exportHistory.Quantity;
-            }
-            
-            
-            
-
-
-
-        }
-        public int Id { get; set; }
-        public int InventoriesAfter { get; set; }
-        public int InventoriesBefor { get; set; }
+     
         public int ImportQuantity { get; set; }
         public string QCode { get; set; }
         public int Price { get; set; }
@@ -79,12 +29,6 @@ namespace Web.Models
         public string costAccountItem { get; set; }
         public string Zone { get; set; }
 
-        public IEnumerable<ReportExcelVM> Gets(IEnumerable<ExportHistoryDTO> importHistory)
-        {
-            foreach (var item in importHistory)
-            {
-                yield return new ReportExcelVM(item);
-            }
-        }
+       
     }
 }

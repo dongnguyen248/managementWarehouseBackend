@@ -16,6 +16,7 @@ namespace Services.Interfaces
         void Add(ExportHistoryDTO exportHistory);
         void UpdateExmportHistory(ExportHistoryDTO exportHistory, string qCode, string remark);
 
+        
 
     }
 }

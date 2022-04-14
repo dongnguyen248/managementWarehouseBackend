@@ -116,6 +116,7 @@ namespace Web
             services.AddTransient<ICostAccountService,CostAccountService>();
             services.AddTransient<IDeparmentService, DepartmentService>();
             services.AddTransient<IExportService, ExportHistoryService>();
+            services.AddTransient<IReportMaterial, ReportMaterialService>();
         }
 
         private void RegiterAuthentication(IServiceCollection services)

@@ -37,7 +37,7 @@ namespace Services
             return _mapper.Map<IEnumerable<ExportHistoryDTO>>(result);
             
         }
-
+       
         public IEnumerable<ExportHistoryDTO> Search(DateTime dateFrom, DateTime dateTo, string Qcode, string PO, string Line, string Supplier, int page, int pageSize, out int totalRow)
         {
             throw new NotImplementedException();

@@ -28,14 +28,14 @@ namespace Services
             _mapper = mapper;
             _exportRepository = exportRepository;
         }
-        public Stream GetReportExcel(DateTime formDate, DateTime toDate)
+        public string GetReportExcel(DateTime formDate, DateTime toDate)
         {
             int daySearch = (toDate.AddDays(1) - formDate).Days;
-            var materials = _materialRepository.FindAll(x=>x.UnitNavigation,x=>x.ZoneNavigation,x => x.ExportHistories.Where(y => y.ExportDate >= formDate && y.ExportDate <= toDate.AddDays(1)), x => x.ImportHistories.Where(y => y.ImportDate >= formDate && y.ImportDate <= toDate.AddDays(1)));
+            var materials = _materialRepository.FindAll(x=>x.UnitNavigation,x=>x.ZoneNavigation,
+                                                        x => x.ExportHistories.Where(y => y.ExportDate >= formDate && y.ExportDate <= toDate.AddDays(1)), 
+                                                        x => x.ImportHistories.Where(y => y.ImportDate >= formDate && y.ImportDate <= toDate.AddDays(1)));
 
             var listMaterial = MaterialsReport(materials, daySearch,formDate);
-            
-
 
             return CreateExcelFile(listMaterial); 
         }
@@ -51,94 +51,111 @@ namespace Services
 
                     var quantityImport = item.ImportHistories.Where(x => x.MaterialNavigation.Qcode == item.Qcode && x.ImportDate == newddate).Sum(x => x.Quantity);
                     var quantityExport = item.ExportHistories.Where(x => x.MaterialNavigation.Qcode == item.Qcode && x.ExportDate == formDate.AddDays(i)).Sum(x => x.Quantity);
+                    var importItem = _exportRepository.FindSingle(x => x.MaterialNavigation.Qcode == item.Qcode,x=>x.CostAccountItemNavigation,x=>x.CostAccountNavigation,x =>x.ReceiverNavigation);
                     materialsReport.Add(new ReportExcelDTO
                     {
                         QCode = item.Qcode,
-                        //Unit = item.UnitNavigation.Name,
+                        Unit = item.UnitNavigation.Name,
                         Price = item.ExportHistories.Where(x => x.MaterialNavigation.Qcode == item.Qcode).FirstOrDefault().Price,
-                        //Location = item.Location,
+                        Location = item.Location,
                         ImportQuantity = quantityImport,
-                        //ExportQuantity = quantityExport,
-                        //ExportDate = newddate
-                    });
+                        ExportQuantity = quantityExport,
+                        ExportDate = newddate,
+                        Item = item.Item,
+                        Specification = item.Specification,
+                        Line = importItem.ReceiverNavigation.Name,
+                        CostLine = importItem.ReceiverNavigation.CostCenter,
+                        CostAccount = importItem.CostAccountNavigation.Name,
+                        costAccountItem = importItem.CostAccountItemNavigation.Note,
+                        Locator = "QMA01." + item.ZoneNavigation.Name + item.Location,
+                        Inspection = _importtRepository.FindSingle(x => x.MaterialNavigation.Qcode == item.Qcode,x=>x.InspectionNavigation).InspectionNavigation.Inspector
+                       
+
+                    }) ;
                 }
             }
             return materialsReport;
         }
-        private Stream CreateExcelFile(List<ReportExcelDTO> listItem, Stream stream = null)
+        private string CreateExcelFile(List<ReportExcelDTO> listItem, Stream stream = null)
         {
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
             using (var excelPackage = new ExcelPackage(stream ?? new MemoryStream()))
             {
-                // Tạo author cho file Excel
+                
                 excelPackage.Workbook.Properties.Author = "DongNguyen";
-                // Tạo title cho file Excel
-                excelPackage.Workbook.Properties.Title = "EPP test background";
-                // thêm tí comments vào làm màu 
-                excelPackage.Workbook.Properties.Comments = "This is my fucking generated Comments";
-                // Add Sheet vào file Excel
+                
                 excelPackage.Workbook.Worksheets.Add("First-Sheet");
-                // Lấy Sheet bạn vừa mới tạo ra để thao tác 
+
                 var workSheet = excelPackage.Workbook.Worksheets["First-Sheet"];
-                // Đỗ data vào Excel file
-                workSheet.Cells[1, 1].LoadFromCollection(listItem, true, TableStyles.Dark9);
+                workSheet.DefaultColWidth = 30;
+                workSheet.Row(1).Height = 40;
+               
                 BindingFormatForExcel(workSheet, listItem);
-                excelPackage.Save();
-                excelPackage.SaveAs(new FileInfo(@"D:\\New.xlsx"));
-                return excelPackage.Stream;
+                workSheet.Cells[$"A2:A{listItem.Count()}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                var fileName = $"Dally-Report--{DateTime.Now.ToString("yyyyMMddhhmmssff")}.xlsx" ;
+                excelPackage.SaveAs(new FileInfo($@"D:\\C#\WarehouseManagement-main\\Web\\FileReport\\{fileName}"));
+                return fileName;
             }
         }
         private void BindingFormatForExcel(ExcelWorksheet worksheet, List<ReportExcelDTO> listMaterial)
         {
-            // Set default width cho tất cả column
-            //worksheet.DefaultColWidth = 10;
-            // Tự động xuống hàng khi text quá dài
+           
             worksheet.Cells.Style.WrapText = true;
-            // Tạo header
-            worksheet.Cells[1, 1].Value = "ID";
-            worksheet.Cells[1, 2].Value = "Full Name";
-            worksheet.Cells[1, 3].Value = "Address";
-            worksheet.Cells[1, 4].Value = "Money";
+            worksheet.Cells[1, 1].Value = "No";
+            worksheet.Cells[1, 2].Value = "Export Date";
+            worksheet.Cells[1, 3].Value = "QCode";
+            worksheet.Cells[1, 4].Value = "Item";
+            worksheet.Cells[1, 5].Value = "Spec";
+            worksheet.Cells[1, 6].Value = "Unit";
+            worksheet.Cells[1, 7].Value = "Price";
+            worksheet.Cells[1, 8].Value = "In";
+            worksheet.Cells[1, 9].Value = "Out";
+            worksheet.Cells[1, 10].Value = "Line";
+            worksheet.Cells[1, 11].Value = "Cost Center";
+            worksheet.Cells[1, 12].Value = "Cost Account";
+            worksheet.Cells[1, 13].Value = "Cost AcoutnItem";
+            worksheet.Cells[1, 14].Value = "Locator";
+            worksheet.Cells[1, 15].Value = "Inspection";
 
-            // Lấy range vào tạo format cho range đó ở đây là từ A1 tới D1
-            using (var range = worksheet.Cells["A1:D1"])
+            using (var range = worksheet.Cells["A1:O1"])
             {
-                // Set PatternType
-                range.Style.Fill.PatternType = ExcelFillStyle.DarkGray;
-                // Set Màu cho Background
-                range.Style.Fill.BackgroundColor.SetColor(Color.Aqua);
-                // Canh giữa cho các text
+                Color colFromHex = ColorTranslator.FromHtml("#29E669");
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                range.Style.Fill.BackgroundColor.SetColor(colFromHex);
                 range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                // Set Font cho text  trong Range hiện tại
-                //range.Style.Font.SetFromFont(new Font("Arial", 10));
-                // Set Border
-                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
-                // Set màu ch Border
-                range.Style.Border.Bottom.Color.SetColor(Color.Blue);
+                range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                range.Style.Font.Bold = true;
+                range.Style.Font.Color.SetColor(Color.Black);
+                
             }
 
             // Đỗ dữ liệu từ list vào 
-            for (int i = 0; i < listMaterial.Count; i++)
+            for (int i = 1; i < listMaterial.Count; i++)
             {
+                
                 var item = listMaterial[i];
-                worksheet.Cells[i + 2, 1].Value = i;
-                worksheet.Cells[i + 2, 2].Value = item.QCode;
-                worksheet.Cells[i + 2, 3].Value = item.ImportQuantity;
-                worksheet.Cells[i + 2, 4].Value = item.Price;
-
-
-
+                worksheet.Cells[i + 1, 1].Value = i;
+                worksheet.Cells[i + 1, 2].Value = item.ExportDate.ToString("yyyy-MM-dd");
+                worksheet.Cells[i + 1, 3].Value = item.QCode;
+                worksheet.Cells[i + 1, 4].Value = item.Item;
+                worksheet.Cells[i + 1, 5].Value = item.Specification;
+                worksheet.Cells[i + 1, 6].Value = item.Unit;
+                worksheet.Cells[i + 1, 7].Value = item.Price;
+                worksheet.Cells[i + 1, 8].Value = item.ImportQuantity;
+                worksheet.Cells[i + 1, 9].Value = item.ExportQuantity;
+                worksheet.Cells[i + 1, 10].Value = item.Line;
+                worksheet.Cells[i + 1, 11].Value = item.CostLine;
+                worksheet.Cells[i + 1, 12].Value = item.CostAccount;
+                worksheet.Cells[i + 1, 13].Value = item.costAccountItem;
+                worksheet.Cells[i + 1, 14].Value = item.Locator;
+                worksheet.Cells[i + 1, 15].Value = item.Inspection;
             }
-            // Format lại định dạng xuất ra ở cột Money
-            worksheet.Cells[2, 4, listMaterial.Count + 4, 4].Style.Numberformat.Format = "$#,##.00";
-            // fix lại width của column với minimum width là 15
-            worksheet.Cells[1, 1, listMaterial.Count + 5, 4].AutoFitColumns(15);
 
-            // Thực hiện tính theo formula trong excel
-            // Hàm Sum 
-            worksheet.Cells[listMaterial.Count + 3, 3].Value = "Total is :";
-            worksheet.Cells[listMaterial.Count + 3, 4].Formula = "SUM(D2:D" + (listMaterial.Count + 1) + ")";
-           
+            //worksheet.Cells["A1:O1"].AutoFitColumns();
+
+
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using DTO;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using OfficeOpenXml;
 using Services.Interfaces;
 using System;
@@ -18,10 +20,13 @@ namespace Web.Controllers
     {
         private readonly IExportService _exportService;
         private readonly IReportMaterial _reportService;
-        public ExportController(IExportService exportService, IReportMaterial reportService)
+        private IWebHostEnvironment _hostEnvironment;
+        
+        public ExportController(IExportService exportService, IReportMaterial reportService, IWebHostEnvironment webHostEnvironment)
         {
             _exportService = exportService;
             _reportService = reportService;
+            _hostEnvironment = webHostEnvironment;
         }
         [HttpPost("add-export")]
         public IActionResult AddExportHistory(ExportHistoryDTO exportHistory)
@@ -40,34 +45,25 @@ namespace Web.Controllers
         }
 
         [HttpGet("export-excel")]
-        public IActionResult GetExcelExportHistories(DateTime fromDate, DateTime toDate)
+        public FileContentResult GetExcelExportHistories(DateTime fromDate, DateTime toDate)
         {
 
-            Stream stream = _reportService.GetReportExcel(fromDate, toDate);
-            //var buffer = stream as MemoryStream;
-            //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-            //HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=ExcelDemo.xlsx");
-            ExcelPackage.LicenseContext = LicenseContext.Commercial;
-
-            //var _stream = new MemoryStream();
-            //using (var xlPackage = new ExcelPackage(_stream))
-            //{
-            //    var worksheet = xlPackage.Workbook.Worksheets.Add("Users");
-            //    var namedStyle = xlPackage.Workbook.Styles.CreateNamedStyle("HyperLink");
-            //    worksheet.Cells["A1"].Value = "Sample";
-            //    xlPackage.Workbook.Properties.Title = "User List";
-            //    xlPackage.Workbook.Properties.Author = "Mohamad Lawand";
-            //    xlPackage.Workbook.Properties.Subject = "User List";
-            //    xlPackage.Save();
-            //    namedStyle.Style.Font.UnderLine = true;
-            //}
-
-            stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "users.xlsx");
-            // Đây là content Type dành cho file excel, còn rất nhiều content-type khác nhưng cái này mình thấy okay nhất
+            string fileName = _reportService.GetReportExcel(fromDate, toDate);
 
 
+
+            
+            string contentRootPath = _hostEnvironment.ContentRootPath;
+            var path = Path.Combine(contentRootPath, $"FileReport\\{fileName}");
+
+            var content = System.IO.File.ReadAllBytes(@path);
+
+            var result = new FileContentResult(content, "application/octet-stream")
+            {
+                FileDownloadName = fileName,
+            };
+            return result;
+            
         }
 
        

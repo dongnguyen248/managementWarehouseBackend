@@ -22,7 +22,7 @@ namespace Web.Models
             Zone = material.ZoneNavigation.Description;
             Unit = material.UnitNavigation.Name;
             Item = material.Item;
-            Locator = material.ZoneNavigation.Name;
+            Locator = "QMA01." + material.ZoneNavigation.Name + material.Location;
             Location = material.Location;
             LastImportDate = lastImportDate;
             Specification = material.Specification;

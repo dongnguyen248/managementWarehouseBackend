@@ -8,7 +8,7 @@ namespace Services.Interfaces
 {
     public interface IReportMaterial
     {
-        Stream GetReportExcel(DateTime formDate, DateTime toDate);
+        string GetReportExcel(DateTime formDate, DateTime toDate);
 
     }
 }

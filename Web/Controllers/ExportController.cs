@@ -1,15 +1,10 @@
 ﻿using DTO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
-using OfficeOpenXml;
 using Services.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using Web.Models;
 
 namespace Web.Controllers
@@ -65,8 +60,26 @@ namespace Web.Controllers
             return result;
             
         }
+        [HttpGet("export-histories-excel")]
+        public FileContentResult GetExceltHistories(DateTime fromDate, DateTime toDate)
+        {
 
-       
+            string fileName = _reportService.GetExportHistoriesExcel(fromDate, toDate);
+
+            string contentRootPath = _hostEnvironment.ContentRootPath;
+            var path = Path.Combine(contentRootPath, $"FileReport\\{fileName}");
+
+            var content = System.IO.File.ReadAllBytes(@path);
+
+            var result = new FileContentResult(content, "application/octet-stream")
+            {
+                FileDownloadName = fileName,
+            };
+            return result;
+
+        }
+
+
 
     }
 }

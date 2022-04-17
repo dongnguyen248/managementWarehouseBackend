@@ -22,5 +22,6 @@ namespace DTO
         public string costAccountItem { get; set; }
         public string Zone { get; set; }
         public string Inspection { get; set; }
+        public int inventories { get; set; }
     }
 }

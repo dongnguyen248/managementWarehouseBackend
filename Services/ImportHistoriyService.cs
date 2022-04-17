@@ -65,14 +65,10 @@ namespace Services
       
         public  void UpdateImportHistory(ImportHistoryDTO importHistory)
         {
-           //var material = _materialRepository.FindSingle(m=>m.Qcode.Contains(qCode));
-                _importRepository.Update(_mapper.Map<ImportHistory>(importHistory));
+               _importRepository.Update(_mapper.Map<ImportHistory>(importHistory));
             
-                _unitOfWork.Commit();
-            //if (material != null)
-            //{
-            //    _materialRepository.Update(material);
-            //}
+               _unitOfWork.Commit();
+          
         }
     }
 }

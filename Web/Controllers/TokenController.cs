@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Services.Interfaces;
+using System;
 using Web.Helpers.Auth;
 
 namespace Web.Controllers
@@ -18,7 +19,65 @@ namespace Web.Controllers
             _configuration = configuration;
             _employeeService = employeeService;
         }
+        [HttpGet]
+        public IActionResult GetAllEmp()
+        {
+            var employees = _employeeService.GetAllEmployee();
+            return Ok(employees);
+        }
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword(int id,string newPassword)
+        {
+            try
+            {
+                _employeeService.ChangePassword(id, newPassword);
+                return Ok();
 
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpPost("add-user")]
+        public IActionResult CreateEmployee(EmployeeDTO employee)
+        {
+            try
+            {
+
+                _employeeService.Create(employee);
+                return Ok();
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("update-user")]
+        public IActionResult UpdateEmployee(EmployeeDTO employee)
+        {
+            try
+            {
+                _employeeService.Update(employee);
+                return Ok();
+
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("delete-user")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            try
+            {
+                _employeeService.Delete(id);
+                return Ok();
+
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost]
         public IActionResult Post(EmployeeDTO employee)
         {
@@ -36,7 +95,8 @@ namespace Web.Controllers
                             user.Id,
                             user.EmployeeId,
                             user.FirstName,
-                            user.LastName
+                            user.LastName,
+                            user.IsAdmin
                         },
                         token
                     });

@@ -9,6 +9,6 @@ namespace Services.Interfaces
     public interface IReportMaterial
     {
         string GetReportExcel(DateTime formDate, DateTime toDate);
-
+        string GetExportHistoriesExcel(DateTime formDate, DateTime toDate);
     }
 }

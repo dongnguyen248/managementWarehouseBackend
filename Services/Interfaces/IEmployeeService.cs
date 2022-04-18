@@ -10,6 +10,6 @@ namespace Services.Interfaces
         IEnumerable<EmployeeDTO> GetAllEmployee();
         void Update(EmployeeDTO employee);
         void Delete(int id);
-        void ChangePassword(int id, string newPassword);
+        void ChangePassword(int id, string newPassword, string oldPassword);
     }
 }

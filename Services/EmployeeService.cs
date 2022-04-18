@@ -36,15 +36,24 @@ namespace Services
 
         public void Create(EmployeeDTO employee)
         {
-            try
+            var emp = _employeeRepository.FindSingle(x=>x.EmployeeId == employee.EmployeeId);
+            if(emp != null)
             {
-                employee.Password = Encryptor.MD5Hash(employee.Password);
-                _employeeRepository.Add(_mapper.Map<Employee>(employee));
-                _unitOfWork.Commit();
+                throw new InvalidOperationException("employee already created");
+            }
+            else
+            {
 
-            }catch (Exception ex)
-            {
-                
+                try
+                {
+                    employee.Password = Encryptor.MD5Hash(employee.Password);
+                    _employeeRepository.Add(_mapper.Map<Employee>(employee));
+                    _unitOfWork.Commit();
+
+                }catch (Exception ex)
+                {
+                    throw new InvalidOperationException(ex.Message);
+                }
             }
             
             
@@ -60,28 +69,37 @@ namespace Services
 
             }catch (Exception ex)
             {
-
+                throw new InvalidOperationException(ex.Message);
             }
         }
-        public void ChangePassword(int id, string newPassword)
+        public void ChangePassword(int id, string newPassword, string oldPassword)
         {
             var employee = _employeeRepository.FindById(id);
+
             if (employee != null)
             {
-                try
+                bool checkPassword = employee.Password == Encryptor.MD5Hash(oldPassword);
+                if (checkPassword)
                 {
-                    employee.Password = Encryptor.MD5Hash(newPassword);
-                    _employeeRepository.Update(_mapper.Map<Employee>(employee));
-                    _unitOfWork.Commit();
-                }catch(Exception ex)
+                    try
+                    {
+                        employee.Password = Encryptor.MD5Hash(newPassword);
+                        _employeeRepository.Update(_mapper.Map<Employee>(employee));
+                        _unitOfWork.Commit();
+                    }catch(Exception ex)
+                    {
+                        throw new InvalidOperationException(ex.Message);
+                    }
+                }
+                else
                 {
-
+                    throw new InvalidOperationException("Old  Pasword is Wrong Please check again!");
                 }
 
             }
             else
             {
-                return;
+                throw new InvalidOperationException("User  is Wrong Please check again!");
             }
            
         }
@@ -95,8 +113,7 @@ namespace Services
             }
             catch(Exception ex)
             {
-                
-
+                throw new InvalidOperationException(ex.Message);
             }
            
         }

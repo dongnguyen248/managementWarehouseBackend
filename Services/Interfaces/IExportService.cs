@@ -14,7 +14,7 @@ namespace Services.Interfaces
         IEnumerable<ExportHistoryDTO> Search(DateTime dateFrom, DateTime dateTo, string Qcode, string PO, string Line, string Supplier, int page, int pageSize, out int totalRow);
 
         void Add(ExportHistoryDTO exportHistory);
-        void UpdateExmportHistory(ExportHistoryDTO exportHistory, string qCode, string remark);
+        void UpdateExportHistory(ExportHistoryDTO exportHistory);
 
         
 

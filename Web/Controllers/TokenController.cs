@@ -26,11 +26,11 @@ namespace Web.Controllers
             return Ok(employees);
         }
         [HttpPost("change-password")]
-        public IActionResult ChangePassword(int id,string newPassword)
+        public IActionResult ChangePassword(int id,string newPassword,string oldPassword)
         {
             try
             {
-                _employeeService.ChangePassword(id, newPassword);
+                _employeeService.ChangePassword(id, newPassword,oldPassword);
                 return Ok();
 
             }catch(Exception ex)

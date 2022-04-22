@@ -244,7 +244,7 @@ namespace Data
                     .IsUnicode(false)
                     .HasColumnName("QCode");
 
-                entity.Property(e => e.Specification).HasMaxLength(500);
+                entity.Property(e => e.Specification).HasMaxLength(1500);
 
                 entity.HasOne(d => d.UnitNavigation)
                     .WithMany(p => p.Materials)

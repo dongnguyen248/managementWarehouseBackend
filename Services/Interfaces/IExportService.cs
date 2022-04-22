@@ -15,8 +15,7 @@ namespace Services.Interfaces
 
         void Add(ExportHistoryDTO exportHistory);
         void UpdateExportHistory(ExportHistoryDTO exportHistory);
-
-        
-
+        IEnumerable<ExportHistoryDTO> GetAllExpHis();
+        void DeleteHistory(int id);
     }
 }

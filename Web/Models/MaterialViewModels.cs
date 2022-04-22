@@ -27,6 +27,7 @@ namespace Web.Models
             LastImportDate = lastImportDate;
             Specification = material.Specification;
             Inventory = totalImport - totalExport;
+            Price = material.ImportHistories.OrderByDescending(x=>x.ImportDate).FirstOrDefault().Price;
         }
 
         public int Id { get; set; }
@@ -39,6 +40,7 @@ namespace Web.Models
         public DateTime LastImportDate { get; set; }
         public string Specification { get; set; }
         public int Inventory { get; set; }
+        public int Price { get; set; }  
 
        
         public IEnumerable<MaterialViewModels> Gets(IEnumerable<MaterialDTO> materials)

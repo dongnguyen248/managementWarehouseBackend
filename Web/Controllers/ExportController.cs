@@ -76,7 +76,26 @@ namespace Web.Controllers
                 FileDownloadName = fileName,
             };
             return result;
+        }
+        [HttpGet("export-histories")]
+        public IActionResult GetAllHistories()
+        {
+            return Ok(_exportService.GetAllExpHis());
+        }
 
+        [HttpDelete]
+        public IActionResult DeleteHistory(int id)
+        {
+            try
+            {
+                _exportService.DeleteHistory(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
 

@@ -34,14 +34,16 @@ namespace Web.Controllers
                 PageIndex = page,
                 TotalRows = totalRow,
                 PageSize = pageSize,
-                Items = importHistoriesVMs
+                Items = importHistoriesVMs,
+                Total = importHistories.Sum(x => x.Quantity)
+
             };
             return Ok(pagedSet);
         }
         [HttpGet("{page}/{pageSize}/search")]
         public IActionResult Search(DateTime dateFrom, DateTime dateTo, string qCode, string Po, string Line, string Supplier, int page, int pageSize)
         {
-            //DateTime dateFrom, DateTime dateTo, string Qcode, string PO, string Line, string Supplier, int page, int pageSize, out int totalRow
+            
             IEnumerable<ImportHistoryDTO> importHistories = _importService.Search(dateFrom, dateTo, qCode, Po, Line, Supplier, page, pageSize, out int totalRow);
             IEnumerable<ImportHistoryVM> importHistoryVMs = new ImportHistoryVM().Gets(importHistories);
             PaginationSet<ImportHistoryVM> pagedSet = new PaginationSet<ImportHistoryVM>()
@@ -49,7 +51,8 @@ namespace Web.Controllers
                 PageIndex = page,
                 TotalRows = totalRow,
                 PageSize = pageSize,
-                Items = importHistoryVMs
+                Items = importHistoryVMs,
+
             };
             return Ok(pagedSet);
         }
@@ -81,6 +84,18 @@ namespace Web.Controllers
                 return Ok();
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.Message);
+            }
+        }
+        [HttpDelete]
+        public IActionResult DeleteImportHistory(int id)
+        {
+            try
+            {
+                _importService.Delete(id);
+                return Ok();
+            }catch (Exception ex)
             {
                 return BadRequest(ex.InnerException.Message);
             }

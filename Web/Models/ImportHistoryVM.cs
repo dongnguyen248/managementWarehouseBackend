@@ -15,9 +15,10 @@ namespace Web.Models
             Id = importHistory.Id;
             QCode = importHistory.MaterialNavigation.Qcode;
             Price = importHistory.Price;
+            Quantity = importHistory.Quantity;
             Item = importHistory.MaterialNavigation.Item;
             Location = importHistory.MaterialNavigation.Location;
-            Locator = "QMA01." + importHistory.MaterialNavigation.Zone + importHistory.MaterialNavigation.Location;
+            Locator = "QMA01." + importHistory.MaterialNavigation.ZoneNavigation.Name != null ? importHistory.MaterialNavigation.ZoneNavigation.Name : "" + "-"+ importHistory.MaterialNavigation.Location != null ? importHistory.MaterialNavigation.Location :"";
             LastImportDate = importHistory.ImportDate;
             Specification = importHistory.MaterialNavigation.Specification;
             Buyer = importHistory.Buyer;
@@ -34,6 +35,7 @@ namespace Web.Models
         public int Id { get; set; }
         public string QCode { get; set; }
         public int Price { get; set; }
+        public int Quantity { get; set; }
         public string Item { get; set; }
         public string Location { get; set; }
         public string Locator { get; set; }

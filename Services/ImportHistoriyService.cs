@@ -41,9 +41,23 @@ namespace Services
             }
         }
 
+        public void Delete(int id)
+        {
+            try
+            {
+                var importHisDelete = _importRepository.FindById(id);
+                _importRepository.Remove(_mapper.Map<ImportHistory>(importHisDelete));
+                _unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
         public IEnumerable<ImportHistoryDTO> GetAll(int page, int pageSize, out int totalRow)
         {
-            IQueryable<ImportHistory> importHistories = _importRepository.FindAll(x => x.LineRequestNavigation,m=>m.MaterialNavigation,h=>h.HandlerNavigation, i => i.InspectionNavigation);
+            IQueryable<ImportHistory> importHistories = _importRepository.FindAll(x => x.LineRequestNavigation,x=>x.MaterialNavigation.ZoneNavigation,m=>m.MaterialNavigation,h=>h.HandlerNavigation, i => i.InspectionNavigation);
             totalRow = importHistories.Count();
             IEnumerable<ImportHistory> result = importHistories.OrderByDescending(x => x.CreatedDate).Skip(pageSize * (page - 1)).Take(pageSize).AsEnumerable();
             return _mapper.Map<IEnumerable<ImportHistoryDTO>>(result);
@@ -65,9 +79,21 @@ namespace Services
       
         public  void UpdateImportHistory(ImportHistoryDTO importHistory)
         {
-               _importRepository.Update(_mapper.Map<ImportHistory>(importHistory));
-            
+            try
+            {
+                ImportHistory importUpdate =  _importRepository.FindSingle(x=>x.Id == importHistory.Id);
+                if (importUpdate != null)
+                {
+                    importHistory.Material = importUpdate.Material;
+                    _importRepository.Update(_mapper.Map<ImportHistory>(importHistory));
+                }
+
                _unitOfWork.Commit();
+            }catch (Exception ex)
+            {
+
+            }
+            
           
         }
     }

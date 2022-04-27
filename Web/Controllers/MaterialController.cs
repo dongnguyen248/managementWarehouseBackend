@@ -38,7 +38,7 @@ namespace Web.Controllers
                 PageIndex = page,
                 TotalRows = totalRow,
                 PageSize = pageSize,
-                Items = materialVMs
+                Items = materialVMs.Where(m=>m.Inventory > 0)
             };
             return Ok(pagedSet);
         }

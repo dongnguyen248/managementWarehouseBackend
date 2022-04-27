@@ -15,10 +15,9 @@ namespace Data
         public string Requestor { get; set; }
         public int Handler { get; set; }
         public int Department { get; set; }
-        public int costAccount { get; set; }
-        public int costAccountItem { get; set; }
-        public int inventoriesAfter { get; set; }
-        public int inventoriesBefor { get; set; }
+        public int CostAccount { get; set; }
+        public int CostAccountItem { get; set; }
+        public int InventoriesBefor { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Remark { get; set; }
         public virtual Employee HandlerNavigation { get; set; }

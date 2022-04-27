@@ -112,7 +112,7 @@ namespace Web
             services.AddTransient<IUnitService, UnitService>();
             services.AddTransient<ILineService, LineService>();
             services.AddTransient<IZoneService, ZoneService>();
-            services.AddTransient<IImportService,ImportHistoriyService>();
+            services.AddScoped<IImportService,ImportHistoriyService>();
             services.AddTransient<ICostAccountService,CostAccountService>();
             services.AddTransient<IDeparmentService, DepartmentService>();
             services.AddTransient<IExportService, ExportHistoryService>();

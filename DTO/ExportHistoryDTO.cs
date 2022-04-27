@@ -14,12 +14,11 @@ namespace DTO
         public int Handler { get; set; }
         public int Department { get; set; }
         public string Remark { get; set; }
-        public int costAccount { get; set; }
-        public int costAccountItem { get; set; }
-        public int inventoriesAfter { get; set; }
-        public int inventoriesBefor { get; set; }
+        public int CostAccount { get; set; }
+        public int CostAccountItem { get; set; }
+        public int InventoriesBefor { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
 
         public virtual EmployeeDTO HandlerNavigation { get; set; }
         public virtual MaterialDTO MaterialNavigation { get; set; }

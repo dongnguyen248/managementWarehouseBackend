@@ -13,6 +13,7 @@ namespace Services.AutoMapperConfig
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
             CreateMap<ExportHistory, ExportHistoryDTO>().ReverseMap();
             CreateMap<ImportHistory, ImportHistoryDTO>().ReverseMap();
+            CreateMap<ImportHistory, ImportHistoryDTOUpdate>().ReverseMap();
             CreateMap<Inspection, InspectionDTO>().ReverseMap();
             CreateMap<Line, LineDTO>().ReverseMap();
             CreateMap<Material, MaterialDTO>().ReverseMap();

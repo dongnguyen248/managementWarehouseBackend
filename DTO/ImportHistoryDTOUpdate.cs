@@ -2,10 +2,9 @@
 
 namespace DTO
 {
-    public class ImportHistoryDTO
+    public class ImportHistoryDTOUpdate
     {
         public int Id { get; set; }
-        public int Material { get; set; }
         public DateTime ImportDate { get; set; }
         public int Quantity { get; set; }
         public int Price { get; set; }
@@ -14,13 +13,23 @@ namespace DTO
         public string Buyer { get; set; }
         public string Po { get; set; }
         public bool Allocated { get; set; }
-        public int Handler { get; set; }
         public string Remark { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-        public virtual EmployeeDTO HandlerNavigation { get; set; }
-        public virtual LineDTO LineRequestNavigation { get; set; }
-        public virtual MaterialDTO MaterialNavigation { get; set; }
-        public virtual InspectionDTO InspectionNavigation { get; set; }
     }
 }
+//Allocated: true
+//​​
+//Buyer: "Nguyen van A"
+//​​
+//LineRequest: 64
+//​​
+//Po: "456546546"
+//​​
+//id: 3329
+//​​
+//price: 3987
+//​​
+//remark: "                       aaaa                           "
+//​​
+//supplier: "GUILD                              

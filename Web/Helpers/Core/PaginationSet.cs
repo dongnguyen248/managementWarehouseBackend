@@ -8,5 +8,7 @@ namespace Web.Helpers.Core
         public int PageSize { get; set; }
         public int TotalRows { set; get; }
         public IEnumerable<TEntity> Items { set; get; }
+        public int Total { set; get; }
+        
     }
 }

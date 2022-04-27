@@ -107,9 +107,9 @@ namespace Data
             {
                 entity.ToTable("ExportHistory");
                 entity.Property(e => e.Remark).HasMaxLength(300);
-                entity.HasOne(e => e.CostAccountItemNavigation).WithMany(p => p.ExportHistories).HasForeignKey(d => d.costAccountItem);
+                entity.HasOne(e => e.CostAccountItemNavigation).WithMany(p => p.ExportHistories).HasForeignKey(d => d.CostAccountItem);
                 entity.HasOne(e=>e.CostAccountNavigation)
-                .WithMany(p => p.ExportHistories).HasForeignKey(d => d.costAccount);
+                .WithMany(p => p.ExportHistories).HasForeignKey(d => d.CostAccount);
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");

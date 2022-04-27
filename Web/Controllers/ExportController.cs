@@ -5,6 +5,8 @@ using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Web.Helpers.Core;
 using Web.Models;
 
 namespace Web.Controllers
@@ -34,8 +36,16 @@ namespace Web.Controllers
         {
             IEnumerable<ExportHistoryDTO> exportHistories = _exportService.GetAll(page, pageSize, out int totalRow);
             IEnumerable<ExportHistoryVM> exportHistoriesVM = new ExportHistoryVM().Gets(exportHistories);
+            PaginationSet<ExportHistoryVM> pagedSet = new PaginationSet<ExportHistoryVM>()
+            {
+                PageIndex = page,
+                TotalRows = totalRow,
+                PageSize = pageSize,
+                Items = exportHistoriesVM,
+                Total = exportHistories.Sum(x => x.Quantity)
+            };
+            return Ok(pagedSet);
             
-            return Ok(exportHistoriesVM);
 
         }
 
@@ -82,7 +92,18 @@ namespace Web.Controllers
         {
             return Ok(_exportService.GetAllExpHis());
         }
-
+        [HttpPut]
+        public IActionResult UpdateHistories(ExportHistoryDTO exportHistory)
+        {
+            try
+            {
+                _exportService.UpdateExportHistory(exportHistory);
+                return Ok();
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpDelete]
         public IActionResult DeleteHistory(int id)
         {

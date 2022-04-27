@@ -17,7 +17,7 @@ namespace Web.Models
             Price = exportHistory.Price;
             Item = exportHistory.MaterialNavigation.Item;
             Location = exportHistory.MaterialNavigation.Location;
-            Locator = "QMA01." + exportHistory.MaterialNavigation.Zone + exportHistory.MaterialNavigation.Location;
+            Locator = "QMA01." + exportHistory.MaterialNavigation.ZoneNavigation.Name + "-"+ exportHistory.MaterialNavigation.Location;
             ExportDate = exportHistory.ExportDate;
             Specification = exportHistory.MaterialNavigation.Specification;
             CostLine = exportHistory.ReceiverNavigation.CostCenter;
@@ -29,7 +29,8 @@ namespace Web.Models
             CostAccount = exportHistory.CostAccountNavigation.Name;
             costAccountItem = exportHistory.CostAccountItemNavigation.Note;
             Zone = exportHistory.MaterialNavigation.ZoneNavigation.Name;
-         
+            InventoriesBefor= exportHistory.InventoriesBefor;
+            Department = exportHistory.DepartmentNavigation.Name;
         }
 
         public int Id { get; set; }
@@ -49,6 +50,10 @@ namespace Web.Models
         public string CostAccount { get; set; }
         public string costAccountItem { get; set; }
         public string Zone { get; set; }
+        public string Department { get; set; }
+
+        public int InventoriesBefor { get; set; }
+
 
         public IEnumerable<ExportHistoryVM> Gets(IEnumerable<ExportHistoryDTO> importHistory)
         {

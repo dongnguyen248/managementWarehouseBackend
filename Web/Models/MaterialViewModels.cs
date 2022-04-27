@@ -22,11 +22,11 @@ namespace Web.Models
             Zone = material.ZoneNavigation.Description;
             Unit = material.UnitNavigation.Name;
             Item = material.Item;
-            Locator = "QMA01." + material.ZoneNavigation.Name + material.Location;
+            Locator = "QMA01." + material.ZoneNavigation.Name + "-" + material.Location;
             Location = material.Location;
             LastImportDate = lastImportDate;
             Specification = material.Specification;
-            Inventory = totalImport - totalExport;
+            Inventory = (totalImport - totalExport) > 0 ? totalImport - totalExport : 0;
             Price = material.ImportHistories.OrderByDescending(x=>x.ImportDate).FirstOrDefault().Price;
         }
 

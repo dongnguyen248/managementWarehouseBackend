@@ -62,8 +62,18 @@ namespace Services
         {
             try
             {
-                _exportRepository.Update(_mapper.Map<ExportHistory>(exportHistory));
-                _unitOfWork.Commit();
+                ExportHistory exportUpdate = _exportRepository.FindSingle(x => x.Id == exportHistory.Id);
+                if(exportUpdate != null)
+                {
+                    exportHistory.Material = exportUpdate.Material;
+                    _exportRepository.Update(_mapper.Map<ExportHistory>(exportHistory));
+                    _unitOfWork.Commit();
+
+                }
+                else
+                {
+                    throw new InvalidOperationException("No have item. Please check again!");
+                }
             }catch (Exception ex)
             {
                 throw new InvalidOperationException(ex.Message);
